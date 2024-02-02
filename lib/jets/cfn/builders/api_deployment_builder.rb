@@ -15,6 +15,7 @@ module Jets::Cfn::Builders
       add_parameters(deployment.parameters)
       add_outputs(deployment.outputs)
 
+      add_client_certificate # changes parent template
       add_base_path_mapping
     end
 
@@ -41,6 +42,26 @@ module Jets::Cfn::Builders
       iam_role = Jets::Resource::ApiGateway::BasePath::Role.new
       add_resource(iam_role)
       add_outputs(iam_role.outputs)
+    end
+
+    def add_client_certificate
+      return unless Jets.config.stage.client_certificate
+
+      unless Jets.config.stage.client_certificate.kind_of?(String)
+        add_outputs(create_client_certificate)
+        Jets.config.stage.client_certificate = "!Ref ClientCertificate"
+      end
+
+      stage = Jets::Resource::ApiGateway::Stage.new
+      add_resource(stage)
+      add_outputs(stage.outputs)
+    end
+
+    def create_client_certificate
+      resource = Jets::Resource::ApiGateway::ClientCertificate.new
+
+      add_resource(resource)
+      return resource.outputs
     end
 
     # template_path is an interface method

@@ -14,7 +14,6 @@ module Jets::Cfn::Builders
       add_gateway_routes # "child template": build before add_gateway_rest_api. RestApi logical id and change detection is dependent on it.
       add_gateway_rest_api # changes parent template
       add_custom_domain    # changes parent template
-      add_client_certificate # changes parent template
     end
 
     # template_path is an interface method
@@ -56,32 +55,12 @@ module Jets::Cfn::Builders
       end
     end
 
-    def add_client_certificate
-      return unless Jets.config.stage.client_certificate
-
-      unless Jets.config.stage.client_certificate.kind_of?(String)
-        add_outputs(create_client_certificate)
-        Jets.config.stage.client_certificate = "!Ref ClientCertificate"
-      end
-
-      stage = Jets::Resource::ApiGateway::Stage.new
-      add_resource(stage)
-      add_outputs(stage.outputs)
-    end
-
     def create_domain_name
       resource = Jets::Resource::ApiGateway::DomainName.new
 
       return {
         "DomainName" => resource.domain_name
       } if (existing_domain_name?(resource) and !existing_domain_name_on_stack?)
-
-      add_resource(resource)
-      return resource.outputs
-    end
-
-    def create_client_certificate
-      resource = Jets::Resource::ApiGateway::ClientCertificate.new
 
       add_resource(resource)
       return resource.outputs

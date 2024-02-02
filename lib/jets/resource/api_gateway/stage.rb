@@ -16,10 +16,15 @@ module Jets::Resource::ApiGateway
           Type: "AWS::ApiGateway::Stage",
           Properties: {
             ClientCertificateId: Jets.config.stage.client_certificate,
-            RestApiId: "!Ref RestApi"
+            RestApiId: "!Ref RestApi",
+            DeploymentId: "!Ref #{deployment_id}",
           }
         }
       }
+    end
+
+    def deployment_id
+      Jets::Resource::ApiGateway::Deployment.logical_id
     end
 
     def outputs
