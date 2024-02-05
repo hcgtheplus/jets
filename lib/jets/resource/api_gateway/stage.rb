@@ -18,6 +18,7 @@ module Jets::Resource::ApiGateway
             ClientCertificateId: Jets.config.stage.client_certificate,
             RestApiId: "!Ref RestApi",
             DeploymentId: "!Ref #{deployment_id}",
+            StageName: Jets.config.short_env
           }
         }
       }
