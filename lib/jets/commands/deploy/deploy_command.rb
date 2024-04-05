@@ -20,6 +20,10 @@ module Jets::Command
       delete_minimal_stack if minimal_rollback_complete?
       exit_unless_updateable! # Stack could be in a weird rollback state or in progress state
 
+      p 11111111
+      p "first_run?"
+      p first_run?
+
       if first_run?
         ship(stack_type: :minimal)
       end

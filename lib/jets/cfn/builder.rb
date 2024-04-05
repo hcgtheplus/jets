@@ -11,6 +11,9 @@ module Jets::Cfn
       puts "Building CloudFormation templates"
       clean_templates
       build_minimal_parent_template
+      p 1111111111111
+      p "stack_type"
+      p @options[:stack_type]
       if @options[:stack_type] == :full
         build_all_templates
         build_full_parent_template # must be called at the end

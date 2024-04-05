@@ -38,6 +38,10 @@ class Jets::Cfn::Builder
       add_resource(resource)
       add_outputs(resource.outputs)
 
+      p 1111111111111111
+      p "full?"
+      p full?
+
       return unless full?
       # Add application-wide IAM policy from Jets.config.iam_role
       resource = Jets::Cfn::Resource::Iam::ApplicationRole.new
